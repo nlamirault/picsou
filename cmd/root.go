@@ -27,11 +27,22 @@ import (
 )
 
 var (
-	cliName     = "picsou"
-	helpMessage = "Picsou - CLI to monitor cryptocurrencies"
+	cliName           = "picsou"
+	helpMessage       = "Picsou - CLI to monitor cryptocurrencies"
+	completionExample = `
+               # Load the Picsou completion code for bash into the current shell
+               source <(picsou completion bash)
+
+               # Write bash completion code to a file and source if from .bash_profile
+               picsou completion bash > ~/.picsou/completion.bash.inc
+               printf "\n# Picous shell completion\nsource '$HOME/.picsou/completion.bash.inc'\n" >> $HOME/.bash_profile
+               source $HOME/.bash_profile
+
+               # Load the picsou completion code for zsh[1] into the current shell
+               source <(picsou completion zsh)`
 )
 
-func newPoseidonCommand(out io.Writer) *cobra.Command {
+func newApplicationCommand(out io.Writer) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   cliName,
 		Short: "command-line tool to monitor cryptocurrencies",
@@ -39,7 +50,7 @@ func newPoseidonCommand(out io.Writer) *cobra.Command {
 	}
 	rootCmd.AddCommand(
 		newVersionCmd(out, helpMessage),
-		// newCompletionCommand(out, completionExample),
+		newCompletionCommand(out, completionExample),
 	)
 	cobra.EnablePrefixMatching = true
 
@@ -52,7 +63,7 @@ func newPoseidonCommand(out io.Writer) *cobra.Command {
 }
 
 func Execute() {
-	cmd := newPoseidonCommand(os.Stdout)
+	cmd := newApplicationCommand(os.Stdout)
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(pkgcmd.RedOut(err))
 		os.Exit(1)
