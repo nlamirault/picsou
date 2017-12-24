@@ -43,9 +43,9 @@ WARN_COLOR=\033[33;01m
 
 MAKE_COLOR=\033[33;01m%-20s\033[0m
 
-MAIN = github.com/nlamirault/poseidon
+MAIN = github.com/nlamirault/picsou
 SRCS = $(shell git ls-files '*.go' | grep -v '^vendor/')
-EXE = $(shell ls poseidon-*_*)
+EXE = $(shell ls picsou-*_*)
 
 PACKAGE=$(APP)-$(VERSION)
 ARCHIVE=$(PACKAGE).tar
@@ -103,7 +103,7 @@ coverage: ## Launch code coverage
 
 gox: ## Make all binaries
 	@echo -e "$(OK_COLOR)[$(APP)] Create binaries $(NO_COLOR)"
-	$(GOX) $(GOX_ARGS) github.com/nlamirault/poseidon
+	$(GOX) $(GOX_ARGS) github.com/nlamirault/picsou
 
 .PHONY: binaries
 binaries: ## Upload all binaries
