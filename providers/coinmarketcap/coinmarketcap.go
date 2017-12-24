@@ -43,9 +43,10 @@ func (client Client) GetCoins(currency string, limit int64) ([]Coin, error) {
 }
 
 func (client Client) GetCoin(cryptoCurrency string, currency string, limit int64) ([]Coin, error) {
+	glog.V(2).Infof("Get coin: %s using currency %s, %d", cryptoCurrency, currency, limit)
 	var url = fmt.Sprintf("%s/ticker/", client.baseURL)
 
-	cryptoCurrencyName, err := getCryptoCurrency(cryptoCurrency)
+	cryptoCurrencyName, err := getCryptoCurrencyName(cryptoCurrency)
 	if err != nil {
 		return nil, err
 	}

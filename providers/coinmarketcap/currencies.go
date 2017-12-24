@@ -1186,7 +1186,7 @@ var cryptoCurrencies = map[string]string{
 	"QRZ":       "quartz-qrz",
 }
 
-func getCryptoCurrency(cryptocurrency string) (string, error) {
+func getCryptoCurrencyName(cryptocurrency string) (string, error) {
 	if value, ok := cryptoCurrencies[strings.ToUpper(cryptocurrency)]; ok {
 		return value, nil
 	}

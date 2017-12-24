@@ -30,7 +30,7 @@ import (
 )
 
 var (
-	name     string
+	coin     string
 	coins    []string
 	limit    int64
 	currency string
@@ -68,14 +68,14 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 		Use:   "get",
 		Short: "Display specific crypto currency",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(name) == 0 {
+			if len(coin) == 0 {
 				return fmt.Errorf("missing crypto currency name")
 			}
 			client, err := coinmarketcap.NewClient()
 			if err != nil {
 				return err
 			}
-			return cryptoCmd.getCryptoCurrency(client, currency, name)
+			return cryptoCmd.getCryptoCurrency(client, coin, currency)
 		},
 	}
 
@@ -94,11 +94,11 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 		},
 	}
 	listCryptoCmd.PersistentFlags().Int64Var(&limit, "limit", coinmarketcap.DefaultLimit, "Return a maximum of crypto currencies")
-	listCryptoCmd.PersistentFlags().StringVar(&currency, "currency", coinmarketcap.DefaultCurrency, "Default currency to used")
-	getCryptoCmd.PersistentFlags().StringVar(&name, "name", "", "Crypto currency name")
-	getCryptoCmd.PersistentFlags().StringVar(&currency, "currency", coinmarketcap.DefaultCurrency, "Default currency to used")
+	// listCryptoCmd.PersistentFlags().StringVar(&currency, "currency", coinmarketcap.DefaultCurrency, "Default currency to used")
+	getCryptoCmd.PersistentFlags().StringVar(&coin, "coin", "", "Crypto currency name")
+	// getCryptoCmd.PersistentFlags().StringVar(&currency, "currency", coinmarketcap.DefaultCurrency, "Default currency to used")
 	walletCryptoCmd.PersistentFlags().StringSliceVar(&coins, "coins", nil, "Coins' names")
-	walletCryptoCmd.PersistentFlags().StringVar(&currency, "currency", coinmarketcap.DefaultCurrency, "Default currency to used")
+	cmd.PersistentFlags().StringVar(&currency, "currency", coinmarketcap.DefaultCurrency, "Default currency to used")
 	cmd.AddCommand(walletCryptoCmd)
 	cmd.AddCommand(getCryptoCmd)
 	cmd.AddCommand(listCryptoCmd)
