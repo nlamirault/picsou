@@ -22,6 +22,10 @@
 
 
 [[constraint]]
+  name = "github.com/fatih/color"
+  version = "1.5.0"
+
+[[constraint]]
   branch = "master"
   name = "github.com/golang/glog"
 
