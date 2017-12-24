@@ -35,7 +35,7 @@ func newVersionCmd(out io.Writer, help string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",
 		Short: "Print the version number.",
-		Long:  `All software has versions. This is Poseidon's.`,
+		Long:  `All software has versions. This is Picsou's.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return versionCmd.printVersion(help)
 		},
