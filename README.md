@@ -11,6 +11,8 @@ Available providers :
 
 * [x] Coinmarketcap
 
+![Screenshot](picsou-0.1.0.png)
+
 
 ## Installation
 
