@@ -20,8 +20,8 @@ import (
 )
 
 const (
-	defaultCurrency = "USD"
-	defaultLimit    = 100
+	DefaultCurrency = "USD"
+	DefaultLimit    = 100
 )
 
 type Coin struct {
@@ -29,10 +29,13 @@ type Coin struct {
 	Name             string `json:"name"`
 	Symbol           string `json:"symbol"`
 	Rank             string `json:"rank"`
-	PriceUsd         string `json:"price_usd"`
 	PriceBtc         string `json:"price_btc"`
+	PriceUsd         string `json:"price_usd"`
 	Two4HVolumeUsd   string `json:"24h_volume_usd"`
 	MarketCapUsd     string `json:"market_cap_usd"`
+	PriceEur         string `json:"price_eur"`
+	Two4HVolumeEur   string `json:"24h_volume_eur"`
+	MarketCapEur     string `json:"market_cap_eur"`
 	AvailableSupply  string `json:"available_supply"`
 	TotalSupply      string `json:"total_supply"`
 	MaxSupply        string `json:"max_supply"`
@@ -40,9 +43,40 @@ type Coin struct {
 	PercentChange24H string `json:"percent_change_24h"`
 	PercentChange7D  string `json:"percent_change_7d"`
 	LastUpdated      string `json:"last_updated"`
-	PriceEur         string `json:"price_eur"`
-	Two4HVolumeEur   string `json:"24h_volume_eur"`
-	MarketCapEur     string `json:"market_cap_eur"`
+}
+
+func GetPrice(coin Coin, currency string) string {
+	var price string
+	switch currency {
+	case "EUR":
+		price = coin.PriceEur
+	default:
+		price = coin.PriceUsd
+	}
+	return price
+}
+
+func MarketCap(coin Coin, currency string) string {
+	var marketCap string
+	switch currency {
+	case "EUR":
+		marketCap = coin.MarketCapEur
+	default:
+		marketCap = coin.MarketCapUsd
+	}
+	return marketCap
+}
+
+func Two4HVolume(coin Coin, currency string) string {
+	var volume string
+	switch currency {
+	case "EUR":
+		volume = coin.Two4HVolumeEur
+	default:
+		volume = coin.Two4HVolumeUsd
+	}
+	return volume
+
 }
 
 var cryptoCurrencies = map[string]string{

@@ -30,9 +30,10 @@ import (
 )
 
 var (
-	name  string
-	names []string
-	limit int64
+	name     string
+	names    []string
+	limit    int64
+	currency string
 )
 
 type cryptoCmd struct {
@@ -59,7 +60,7 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return cryptoCmd.listCryptoCurrencies(client, limit)
+			return cryptoCmd.listCryptoCurrencies(client, currency, limit)
 		},
 	}
 
@@ -74,7 +75,7 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return cryptoCmd.getCryptoCurrency(client, name)
+			return cryptoCmd.getCryptoCurrency(client, currency, name)
 		},
 	}
 
@@ -85,8 +86,10 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 			return nil
 		},
 	}
-	listCryptoCmd.PersistentFlags().Int64Var(&limit, "limit", 100, "Return a maximum of crypto currencies")
+	listCryptoCmd.PersistentFlags().Int64Var(&limit, "limit", coinmarketcap.DefaultLimit, "Return a maximum of crypto currencies")
+	listCryptoCmd.PersistentFlags().StringVar(&currency, "currency", coinmarketcap.DefaultCurrency, "Default currency to used")
 	getCryptoCmd.PersistentFlags().StringVar(&name, "name", "", "Crypto currency name")
+	getCryptoCmd.PersistentFlags().StringVar(&currency, "currency", coinmarketcap.DefaultCurrency, "Default currency to used")
 	walletCryptoCmd.PersistentFlags().StringSlice("cryptos", nil, "Cryptos' names")
 	cmd.AddCommand(walletCryptoCmd)
 	cmd.AddCommand(getCryptoCmd)
@@ -94,32 +97,32 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 	return cmd
 }
 
-func (cmd cryptoCmd) listCryptoCurrencies(client *coinmarketcap.Client, result int64) error {
+func (cmd cryptoCmd) listCryptoCurrencies(client *coinmarketcap.Client, currency string, result int64) error {
 	glog.V(1).Info("List crypto currencies")
-	coins, err := client.GetCoins("EUR", result)
+	coins, err := client.GetCoins(currency, result)
 	if err != nil {
 		return err
 	}
-	return cmd.displayCoins(coins)
+	return cmd.displayCoins(coins, currency)
 }
 
-func (cmd cryptoCmd) getCryptoCurrency(client *coinmarketcap.Client, name string) error {
+func (cmd cryptoCmd) getCryptoCurrency(client *coinmarketcap.Client, name string, currency string) error {
 	glog.V(1).Infof("Get crypto currency: %s", name)
-	coins, err := client.GetCoin(name, "EUR", 100)
+	coins, err := client.GetCoin(name, currency, 1)
 	if err != nil {
 		return err
 	}
-	return cmd.displayCoins(coins)
+	return cmd.displayCoins(coins, currency)
 }
 
-func (cmd cryptoCmd) displayCoins(coins []coinmarketcap.Coin) error {
-	ac := accounting.Accounting{Symbol: "€", Precision: 4}
+func (cmd cryptoCmd) displayCoins(coins []coinmarketcap.Coin, currency string) error {
+	ac := getAccounting(currency)
 	table := tablewriter.NewWriter(cmd.out)
 	table.SetHeader([]string{
 		"Rank",
 		"Symbol",
 		"Coin",
-		"EUR Price",
+		"Price",
 		"24 Hour Volume",
 		"Market Cap",
 		"1 Hour",
@@ -134,9 +137,9 @@ func (cmd cryptoCmd) displayCoins(coins []coinmarketcap.Coin) error {
 			pkgcmd.YellowOut(coin.Rank),
 			pkgcmd.BlueOut(coin.Symbol),
 			pkgcmd.BlueOut(coin.Name),
-			getMoney(ac, coin.PriceEur),
-			getMoney(ac, coin.Two4HVolumeEur),
-			getMoney(ac, coin.MarketCapEur),
+			getMoney(ac, coinmarketcap.GetPrice(coin, currency)),
+			getMoney(ac, coinmarketcap.Two4HVolume(coin, currency)),
+			getMoney(ac, coinmarketcap.MarketCap(coin, currency)),
 			getPercentColor(coin.PercentChange1H),
 			getPercentColor(coin.PercentChange24H),
 			getPercentColor(coin.PercentChange7D),
@@ -145,6 +148,17 @@ func (cmd cryptoCmd) displayCoins(coins []coinmarketcap.Coin) error {
 	}
 	table.Render()
 	return nil
+}
+
+func getAccounting(currency string) accounting.Accounting {
+	var ac accounting.Accounting
+	switch currency {
+	case "EUR":
+		ac = accounting.Accounting{Symbol: "€", Precision: 4}
+	default:
+		ac = accounting.Accounting{Symbol: "$", Precision: 4}
+	}
+	return ac
 }
 
 func getMoney(ac accounting.Accounting, value string) string {

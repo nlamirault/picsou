@@ -59,7 +59,7 @@ func makeAPICall(url string, currency string, limit int64) ([]Coin, error) {
 		params = append(params, fmt.Sprintf("limit=%v", limit))
 	}
 
-	if currency != defaultCurrency {
+	if currency != DefaultCurrency {
 		params = append(params, fmt.Sprintf("convert=%s", strings.ToLower(currency)))
 	}
 
@@ -82,17 +82,5 @@ func readCoinData(response []byte, currency string) ([]Coin, error) {
 		return nil, err
 	}
 	glog.V(2).Infof("Response : %s", coins)
-
-	// coins := make([]Coin, len(data))
-	// for i := 0; i < len(data); i++ {
-	// 	coins[i].Name = data[i]["name"]
-	// 	coins[i].Symbol = data[i]["symbol"]
-	// 	coins[i].Price, _ = strconv.ParseFloat(data[i][fmt.Sprintf("price_%s", strings.ToLower(currency))], 64)
-	// 	coins[i].Volume24, _ = strconv.ParseFloat(data[i][fmt.Sprintf("24h_volume_%s", strings.ToLower(currency))], 64)
-	// 	if data[i]["max_supply"] != "" {
-	// 		coins[i].Maxsupply, _ = strconv.ParseFloat(data[i]["max_supply"], 64)
-	// 	}
-	// 	coins[i].Currency = currency
-	// }
 	return coins, nil
 }
