@@ -17,9 +17,11 @@ package cmd
 import (
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
 
 	"github.com/golang/glog"
+	"github.com/leekchan/accounting"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 
@@ -110,10 +112,13 @@ func (cmd cryptoCmd) getCryptoCurrency(client *coinmarketcap.Client, name string
 }
 
 func (cmd cryptoCmd) displayCoins(coins []coinmarketcap.Coin) error {
+	ac := accounting.Accounting{Symbol: "€", Precision: 4}
 	table := tablewriter.NewWriter(cmd.out)
 	table.SetHeader([]string{
 		"Rank",
+		"Symbol",
 		"Coin",
+		"EUR Price",
 		"24 Hour Volume",
 		"Market Cap",
 		"1 Hour",
@@ -124,17 +129,13 @@ func (cmd cryptoCmd) displayCoins(coins []coinmarketcap.Coin) error {
 	table.SetAutoWrapText(false)
 
 	for _, coin := range coins {
-		// var percentChange1H string
-		// if strings.HasPrefix(coin.PercentChange1H, "-") {
-		// 	percentChange1H = pkgcmd.RedOut(coin.PercentChange1H)
-		// } else {
-		// 	percentChange1H = pkgcmd.GreenOut(coin.PercentChange1H)
-		// }
 		table.Append([]string{
-			coin.Rank,
+			pkgcmd.YellowOut(coin.Rank),
 			pkgcmd.BlueOut(coin.Symbol),
-			coin.Two4HVolumeEur,
-			coin.MarketCapEur,
+			pkgcmd.BlueOut(coin.Name),
+			getMoney(ac, coin.PriceEur),
+			getMoney(ac, coin.Two4HVolumeEur),
+			getMoney(ac, coin.MarketCapEur),
 			getPercentColor(coin.PercentChange1H),
 			getPercentColor(coin.PercentChange24H),
 			getPercentColor(coin.PercentChange7D),
@@ -143,6 +144,14 @@ func (cmd cryptoCmd) displayCoins(coins []coinmarketcap.Coin) error {
 	}
 	table.Render()
 	return nil
+}
+
+func getMoney(ac accounting.Accounting, value string) string {
+	money, err := strconv.ParseFloat(value, 64)
+	if err != nil {
+		return value
+	}
+	return ac.FormatMoney(money)
 }
 
 func getPercentColor(value string) string {
