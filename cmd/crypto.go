@@ -32,6 +32,7 @@ import (
 var (
 	name  string
 	names []string
+	limit int64
 )
 
 type cryptoCmd struct {
@@ -58,7 +59,7 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return cryptoCmd.listCryptoCurrencies(client)
+			return cryptoCmd.listCryptoCurrencies(client, limit)
 		},
 	}
 
@@ -84,7 +85,7 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 			return nil
 		},
 	}
-
+	listCryptoCmd.PersistentFlags().Int64Var(&limit, "limit", 100, "Return a maximum of crypto currencies")
 	getCryptoCmd.PersistentFlags().StringVar(&name, "name", "", "Crypto currency name")
 	walletCryptoCmd.PersistentFlags().StringSlice("cryptos", nil, "Cryptos' names")
 	cmd.AddCommand(walletCryptoCmd)
@@ -93,9 +94,9 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 	return cmd
 }
 
-func (cmd cryptoCmd) listCryptoCurrencies(client *coinmarketcap.Client) error {
+func (cmd cryptoCmd) listCryptoCurrencies(client *coinmarketcap.Client, result int64) error {
 	glog.V(1).Info("List crypto currencies")
-	coins, err := client.GetCoins("EUR", 100)
+	coins, err := client.GetCoins("EUR", result)
 	if err != nil {
 		return err
 	}
