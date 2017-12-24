@@ -17,7 +17,7 @@ package coinmarketcap
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
+	// "strconv"
 	"strings"
 
 	"github.com/golang/glog"
@@ -50,24 +50,6 @@ func (client Client) GetCoin(cryptoCurrency string, currency string, limit int64
 		return nil, err
 	}
 	url = fmt.Sprintf("%s%s/", url, cryptoCurrencyName)
-
-	// params := []string{}
-	// if limit > 0 {
-	// 	params = append(params, fmt.Sprintf("limit=%v", limit))
-	// }
-
-	// if currency != defaultCurrency {
-	// 	params = append(params, fmt.Sprintf("convert=%s", strings.ToLower(currency)))
-	// }
-
-	// apiURL := fmt.Sprintf("%s?%s", url, strings.Join(params, "&"))
-	// glog.V(2).Infof("API Url: %s", apiURL)
-	// response, err := fetchCoin(apiURL)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// return readCoinData(response, currency)
 	return makeAPICall(url, currency, limit)
 }
 
@@ -93,25 +75,24 @@ func makeAPICall(url string, currency string, limit int64) ([]Coin, error) {
 }
 
 func readCoinData(response []byte, currency string) ([]Coin, error) {
-
-	data := []map[string]string{}
-	err := json.Unmarshal(response, &data)
+	glog.V(2).Info("HTTP response: %s", string(response))
+	var coins []Coin
+	err := json.Unmarshal(response, &coins)
 	if err != nil {
 		return nil, err
 	}
-	glog.V(2).Infof("Response : %s", data)
+	glog.V(2).Infof("Response : %s", coins)
 
-	coins := make([]Coin, len(data))
-	for i := 0; i < len(data); i++ {
-		coins[i].Name = data[i]["name"]
-		coins[i].Symbol = data[i]["symbol"]
-		coins[i].Price, _ = strconv.ParseFloat(data[i][fmt.Sprintf("price_%s", strings.ToLower(currency))], 64)
-		coins[i].Volume24, _ = strconv.ParseFloat(data[i][fmt.Sprintf("24h_volume_%s", strings.ToLower(currency))], 64)
-		if data[i]["max_supply"] != "" {
-			coins[i].Maxsupply, _ = strconv.ParseFloat(data[i]["max_supply"], 64)
-		}
-		coins[i].Currency = currency
-	}
-
+	// coins := make([]Coin, len(data))
+	// for i := 0; i < len(data); i++ {
+	// 	coins[i].Name = data[i]["name"]
+	// 	coins[i].Symbol = data[i]["symbol"]
+	// 	coins[i].Price, _ = strconv.ParseFloat(data[i][fmt.Sprintf("price_%s", strings.ToLower(currency))], 64)
+	// 	coins[i].Volume24, _ = strconv.ParseFloat(data[i][fmt.Sprintf("24h_volume_%s", strings.ToLower(currency))], 64)
+	// 	if data[i]["max_supply"] != "" {
+	// 		coins[i].Maxsupply, _ = strconv.ParseFloat(data[i]["max_supply"], 64)
+	// 	}
+	// 	coins[i].Currency = currency
+	// }
 	return coins, nil
 }

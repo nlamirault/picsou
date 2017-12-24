@@ -19,7 +19,8 @@ import (
 )
 
 var (
+	BlueOut   = color.New(color.FgBlue).SprintFunc()
 	GreenOut  = color.New(color.FgGreen).SprintFunc()
-	YellowOut = color.New(color.FgYellow).SprintFunc()
 	RedOut    = color.New(color.FgRed).SprintFunc()
+	YellowOut = color.New(color.FgYellow).SprintFunc()
 )

@@ -17,10 +17,13 @@ package cmd
 import (
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/golang/glog"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 
+	pkgcmd "github.com/nlamirault/picsou/pkg/cmd"
 	"github.com/nlamirault/picsou/providers/coinmarketcap"
 )
 
@@ -90,12 +93,64 @@ func newCryptoCmd(out io.Writer) *cobra.Command {
 
 func (cmd cryptoCmd) listCryptoCurrencies(client *coinmarketcap.Client) error {
 	glog.V(1).Info("List crypto currencies")
-	client.GetCoins("EUR", 100)
-	return nil
+	coins, err := client.GetCoins("EUR", 100)
+	if err != nil {
+		return err
+	}
+	return cmd.displayCoins(coins)
 }
 
 func (cmd cryptoCmd) getCryptoCurrency(client *coinmarketcap.Client, name string) error {
 	glog.V(1).Infof("Get crypto currency: %s", name)
-	client.GetCoin(name, "EUR", 100)
+	coins, err := client.GetCoin(name, "EUR", 100)
+	if err != nil {
+		return err
+	}
+	return cmd.displayCoins(coins)
+}
+
+func (cmd cryptoCmd) displayCoins(coins []coinmarketcap.Coin) error {
+	table := tablewriter.NewWriter(cmd.out)
+	table.SetHeader([]string{
+		"Rank",
+		"Coin",
+		"24 Hour Volume",
+		"Market Cap",
+		"1 Hour",
+		"24 Hour",
+		"7 Days",
+		"Last Updated"})
+	table.SetRowLine(true)
+	table.SetAutoWrapText(false)
+
+	for _, coin := range coins {
+		// var percentChange1H string
+		// if strings.HasPrefix(coin.PercentChange1H, "-") {
+		// 	percentChange1H = pkgcmd.RedOut(coin.PercentChange1H)
+		// } else {
+		// 	percentChange1H = pkgcmd.GreenOut(coin.PercentChange1H)
+		// }
+		table.Append([]string{
+			coin.Rank,
+			pkgcmd.BlueOut(coin.Symbol),
+			coin.Two4HVolumeEur,
+			coin.MarketCapEur,
+			getPercentColor(coin.PercentChange1H),
+			getPercentColor(coin.PercentChange24H),
+			getPercentColor(coin.PercentChange7D),
+			coin.LastUpdated,
+		})
+	}
+	table.Render()
 	return nil
+}
+
+func getPercentColor(value string) string {
+	var percent string
+	if strings.HasPrefix(value, "-") {
+		percent = pkgcmd.RedOut(value)
+	} else {
+		percent = pkgcmd.GreenOut(value)
+	}
+	return percent
 }
