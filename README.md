@@ -3,8 +3,10 @@
 [![License Apache 2][badge-license]](LICENSE)
 [![GitHub version](https://badge.fury.io/gh/nlamirault%2Fpicsou.svg)](https://badge.fury.io/gh/nlamirault%2Fpicsou)
 
-* Master : [![Circle CI](https://circleci.com/gh/nlamirault/picsou/tree/master.svg?style=svg)](https://circleci.com/gh/nlamirault/picsou/tree/master)
-* Develop : [![Circle CI](https://circleci.com/gh/nlamirault/picsou/tree/develop.svg?style=svg)](https://circleci.com/gh/nlamirault/picsou/tree/develop)
+* Master : [![pipeline status](https://gitlab.com/nicolas-lamirault/picsou/badges/master/pipeline.svg)](https://gitlab.com/nicolas-lamirault/picsou/commits/master)
+
+* Develop : [![pipeline status](https://gitlab.com/nicolas-lamirault/picsou/badges/develop/pipeline.svg)](https://gitlab.com/nicolas-lamirault/picsou/commits/develop)
+
 
 This tools is a CLI which cant display crypto currencies informations.
 Available providers :
