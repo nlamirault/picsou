@@ -1,0 +1,9 @@
+# Picsou - Portfolio configuration file
+
+currency = "EUR"
+
+[portfolio]
+BTC = "0.013"
+DOGE = "150"
+ETH = "0.145"
+LTC = "0.123"

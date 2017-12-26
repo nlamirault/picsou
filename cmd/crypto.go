@@ -17,12 +17,12 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"strconv"
-	"strings"
+	// "strconv"
+	// "strings"
 
 	"github.com/golang/glog"
-	"github.com/leekchan/accounting"
-	"github.com/olekukonko/tablewriter"
+	// "github.com/leekchan/accounting"
+	// "github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 
 	pkgcmd "github.com/nlamirault/picsou/pkg/cmd"
@@ -111,7 +111,7 @@ func (cmd cryptoCmd) listCryptoCurrencies(client *coinmarketcap.Client, currency
 	if err != nil {
 		return err
 	}
-	return cmd.displayCoins(coins, currency)
+	return pkgcmd.DisplayCoins(cmd.out, coins, currency)
 }
 
 func (cmd cryptoCmd) getCryptoCurrency(client *coinmarketcap.Client, name string, currency string) error {
@@ -120,7 +120,7 @@ func (cmd cryptoCmd) getCryptoCurrency(client *coinmarketcap.Client, name string
 	if err != nil {
 		return err
 	}
-	return cmd.displayCoins(coin, currency)
+	return pkgcmd.DisplayCoins(cmd.out, coin, currency)
 }
 
 func (cmd cryptoCmd) getCryptoWallet(client *coinmarketcap.Client, names []string, currency string) error {
@@ -133,69 +133,5 @@ func (cmd cryptoCmd) getCryptoWallet(client *coinmarketcap.Client, names []strin
 		}
 		coins = append(coins, coin...)
 	}
-	return cmd.displayCoins(coins, currency)
-}
-
-func (cmd cryptoCmd) displayCoins(coins []coinmarketcap.Coin, currency string) error {
-	ac := getAccounting(currency)
-	table := tablewriter.NewWriter(cmd.out)
-	table.SetHeader([]string{
-		"Rank",
-		"Symbol",
-		"Coin",
-		"Price",
-		"24 Hour Volume",
-		"Market Cap",
-		"1 Hour",
-		"24 Hour",
-		"7 Days",
-		"Last Updated"})
-	table.SetRowLine(true)
-	table.SetAutoWrapText(false)
-
-	for _, coin := range coins {
-		table.Append([]string{
-			pkgcmd.YellowOut(coin.Rank),
-			pkgcmd.BlueOut(coin.Symbol),
-			pkgcmd.BlueOut(coin.Name),
-			getMoney(ac, coinmarketcap.GetPrice(coin, currency)),
-			getMoney(ac, coinmarketcap.Two4HVolume(coin, currency)),
-			getMoney(ac, coinmarketcap.MarketCap(coin, currency)),
-			getPercentColor(coin.PercentChange1H),
-			getPercentColor(coin.PercentChange24H),
-			getPercentColor(coin.PercentChange7D),
-			coin.LastUpdated,
-		})
-	}
-	table.Render()
-	return nil
-}
-
-func getAccounting(currency string) accounting.Accounting {
-	var ac accounting.Accounting
-	switch currency {
-	case "EUR":
-		ac = accounting.Accounting{Symbol: "€", Precision: 4}
-	default:
-		ac = accounting.Accounting{Symbol: "$", Precision: 4}
-	}
-	return ac
-}
-
-func getMoney(ac accounting.Accounting, value string) string {
-	money, err := strconv.ParseFloat(value, 64)
-	if err != nil {
-		return value
-	}
-	return ac.FormatMoney(money)
-}
-
-func getPercentColor(value string) string {
-	var percent string
-	if strings.HasPrefix(value, "-") {
-		percent = pkgcmd.RedOut(value)
-	} else {
-		percent = pkgcmd.GreenOut(value)
-	}
-	return percent
+	return pkgcmd.DisplayCoins(cmd.out, coins, currency)
 }

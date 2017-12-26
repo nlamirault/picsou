@@ -52,6 +52,7 @@ func newApplicationCommand(out io.Writer) *cobra.Command {
 		newVersionCmd(out, helpMessage),
 		newCompletionCmd(out, completionExample),
 		newCryptoCmd(out),
+		newPortfolioCmd(out),
 	)
 	cobra.EnablePrefixMatching = true
 
