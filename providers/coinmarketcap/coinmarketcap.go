@@ -28,23 +28,23 @@ const (
 )
 
 type Client struct {
-	baseURL string
+	BaseURL string
 }
 
 func NewClient() (*Client, error) {
 	return &Client{
-		baseURL: apiEndpoint,
+		BaseURL: apiEndpoint,
 	}, nil
 }
 
 func (client Client) GetCoins(currency string, limit int64) ([]Coin, error) {
-	var url = fmt.Sprintf("%s/ticker/", client.baseURL)
+	var url = fmt.Sprintf("%s/ticker/", client.BaseURL)
 	return makeAPICall(url, currency, limit)
 }
 
 func (client Client) GetCoin(cryptoCurrency string, currency string, limit int64) ([]Coin, error) {
 	glog.V(2).Infof("Get coin: %s using currency %s, %d", cryptoCurrency, currency, limit)
-	var url = fmt.Sprintf("%s/ticker/", client.baseURL)
+	var url = fmt.Sprintf("%s/ticker/", client.BaseURL)
 
 	cryptoCurrencyName, err := getCryptoCurrencyName(cryptoCurrency)
 	if err != nil {
@@ -76,7 +76,7 @@ func makeAPICall(url string, currency string, limit int64) ([]Coin, error) {
 }
 
 func readCoinData(response []byte, currency string) ([]Coin, error) {
-	glog.V(2).Info("HTTP response: %s", string(response))
+	glog.V(2).Infof("HTTP response: %s", string(response))
 	var coins []Coin
 	err := json.Unmarshal(response, &coins)
 	if err != nil {

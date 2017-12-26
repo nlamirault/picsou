@@ -30,7 +30,7 @@ var (
 	}
 )
 
-func newCompletionCommand(out io.Writer, example string) *cobra.Command {
+func newCompletionCmd(out io.Writer, example string) *cobra.Command {
 	shells := []string{}
 	for s := range completionShells {
 		shells = append(shells, s)
@@ -42,7 +42,7 @@ func newCompletionCommand(out io.Writer, example string) *cobra.Command {
 		Example: example,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := RunCompletion(out, cmd, args); err != nil {
-				fmt.Println(pkgcmd.RedOut(err))
+				fmt.Fprintln(out, pkgcmd.RedOut(err))
 			}
 			return nil
 		},
@@ -54,14 +54,14 @@ func newCompletionCommand(out io.Writer, example string) *cobra.Command {
 
 func RunCompletion(out io.Writer, cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("Shell not specified.")
+		return fmt.Errorf("Shell not specified")
 	}
 	if len(args) > 1 {
-		return fmt.Errorf("Too many arguments. Expected only the shell type.")
+		return fmt.Errorf("Too many arguments. Expected only the shell type: %s", args)
 	}
 	run, found := completionShells[args[0]]
 	if !found {
-		return fmt.Errorf("Unsupported shell type %q.", args[0])
+		return fmt.Errorf("Unsupported shell type %q", args[0])
 	}
 
 	return run(out, cmd.Parent())
