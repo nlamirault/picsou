@@ -153,3 +153,5 @@ publish_bintray:
     - echo "$BINTRAY_USERNAME"
     - echo "$BINTRAY_URI/content/$BINTRAY_ORG/$BINTRAY_REPOSITORY/$APP/$VERSION"
     - cd binaries && for file in $(ls); do echo $file; curl -T $file -u ${BINTRAY_USERNAME}:${BINTRAY_APIKEY} ${BINTRAY_URI}/content/${BINTRAY_ORG}/${BINTRAY_REPOSITORY}/${APP}/${VERSION}/$i;publish=1; done
+  # only:
+  #   - tags
