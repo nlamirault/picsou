@@ -67,7 +67,10 @@ func newPortfolioCmd(out io.Writer) *cobra.Command {
 func (cmd portfolioCmd) getPortfolio(client *coinmarketcap.Client, conf *config.Configuration) error {
 	glog.V(1).Infof("Get crypto currencies portfolio: %s", conf)
 	coins := []coinmarketcap.Coin{}
-	money := map[string]float64{}
+	wallet := map[string]float64{}
+
+	ac := pkgcmd.GetAccounting(conf.Currency)
+
 	for name, owned := range conf.Portfolio {
 		coin, err := client.GetCoin(name, conf.Currency, 1)
 		if err != nil {
@@ -82,10 +85,13 @@ func (cmd portfolioCmd) getPortfolio(client *coinmarketcap.Client, conf *config.
 		if err != nil {
 			return err
 		}
-		money[name] = nb * price
+		wallet[name] = nb * price
 	}
 	glog.V(2).Infof("Coins: %s", coins)
-	glog.V(2).Infof("Money: %s", money)
+	glog.V(2).Infof("Wallet: %s", wallet)
+	for name, money := range wallet {
+		fmt.Fprintf(cmd.out, "%s: %s\n", pkgcmd.GreenOut(name), pkgcmd.GetMoney(ac, fmt.Sprintf("%f", money)))
+	}
 	if err := pkgcmd.DisplayCoins(cmd.out, coins, conf.Currency); err != nil {
 		return err
 	}

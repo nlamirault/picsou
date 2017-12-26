@@ -25,7 +25,7 @@ import (
 	"github.com/nlamirault/picsou/providers/coinmarketcap"
 )
 
-func getAccounting(currency string) accounting.Accounting {
+func GetAccounting(currency string) accounting.Accounting {
 	var ac accounting.Accounting
 	switch currency {
 	case "EUR":
@@ -46,7 +46,7 @@ func getPercentColor(value string) string {
 	return percent
 }
 
-func getMoney(ac accounting.Accounting, value string) string {
+func GetMoney(ac accounting.Accounting, value string) string {
 	money, err := strconv.ParseFloat(value, 64)
 	if err != nil {
 		return value
@@ -55,7 +55,7 @@ func getMoney(ac accounting.Accounting, value string) string {
 }
 
 func DisplayCoins(out io.Writer, coins []coinmarketcap.Coin, currency string) error {
-	ac := getAccounting(currency)
+	ac := GetAccounting(currency)
 	table := tablewriter.NewWriter(out)
 	table.SetHeader([]string{
 		"Rank",
@@ -76,9 +76,9 @@ func DisplayCoins(out io.Writer, coins []coinmarketcap.Coin, currency string) er
 			YellowOut(coin.Rank),
 			BlueOut(coin.Symbol),
 			BlueOut(coin.Name),
-			getMoney(ac, coinmarketcap.GetPrice(coin, currency)),
-			getMoney(ac, coinmarketcap.Two4HVolume(coin, currency)),
-			getMoney(ac, coinmarketcap.MarketCap(coin, currency)),
+			GetMoney(ac, coinmarketcap.GetPrice(coin, currency)),
+			GetMoney(ac, coinmarketcap.Two4HVolume(coin, currency)),
+			GetMoney(ac, coinmarketcap.MarketCap(coin, currency)),
 			getPercentColor(coin.PercentChange1H),
 			getPercentColor(coin.PercentChange24H),
 			getPercentColor(coin.PercentChange7D),
