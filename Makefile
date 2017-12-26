@@ -28,6 +28,9 @@ DOCKER = docker
 
 GO = go
 
+# Set any default go build tags
+BUILDTAGS :=
+
 GOX = gox -os="linux darwin windows freebsd openbsd netbsd"
 GOX_ARGS = "-output={{.Dir}}-$(VERSION)_{{.OS}}_{{.Arch}}"
 
@@ -77,12 +80,12 @@ deps: ## Install dependencies
 .PHONY: build
 build: ## Make binary
 	@echo -e "$(OK_COLOR)[$(APP)] Build $(NO_COLOR)"
-	@$(GO) build .
+	@CGO_ENABLED=0 $(GO) build -tags "$(BUILDTAGS) static_build" .
 
 .PHONY: test
 test: ## Launch unit tests
 	@echo -e "$(OK_COLOR)[$(APP)] Launch unit tests $(NO_COLOR)"
-	@$(GO) test
+	@$(GO) test -v -tags "$(BUILDTAGS) cgo" $(shell $(GO) list ./... | grep -v vendor)
 
 .PHONY: lint
 lint: ## Launch golint
@@ -95,11 +98,11 @@ vet: ## Launch go vet
 .PHONY: errcheck
 errcheck: ## Launch go errcheck
 	@echo -e "$(OK_COLOR)[$(APP)] Go Errcheck $(NO_COLOR)"
-	@$(foreach pkg,$(PKGS),errcheck $(pkg) $(glide novendor) || exit;)
+	@$(foreach pkg,$(PKGS),errcheck $(pkg) || exit;)
 
 .PHONY: coverage
 coverage: ## Launch code coverage
-	@$(foreach pkg,$(PKGS),$(GO) test -cover $(pkg) $(glide novendor) || exit;)
+	@$(foreach pkg,$(PKGS),$(GO) test -cover $(pkg) || exit;)
 
 gox: ## Make all binaries
 	@echo -e "$(OK_COLOR)[$(APP)] Create binaries $(NO_COLOR)"
