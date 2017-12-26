@@ -36,5 +36,18 @@ func DisplayWalletBars(out io.Writer, name string, money float64, walletTotal fl
 	if err != nil {
 		return
 	}
-	fmt.Fprintf(out, "%v\n", strings.Repeat(barChar, barLen))
+
+	var bars string
+	switch {
+	case 0 < barLen && barLen < 30:
+		bars = BlueOut(barChar)
+	case 30 < barLen && barLen < 50:
+		bars = GreenOut(barChar)
+	case 50 < barLen && barLen < 70:
+		bars = YellowOut(barChar)
+	case 70 < barLen:
+		bars = RedOut(barChar)
+	}
+
+	fmt.Fprintf(out, "%v\n", strings.Repeat(bars, barLen))
 }
