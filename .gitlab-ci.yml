@@ -60,7 +60,7 @@ test_docker:
   script:
     - *docker_tag
     - docker build -t "$CI_REGISTRY_IMAGE:${VERSION}" .
-    - docker run --rm ${CI_REGISTRY_IMAGE}:${VERSION} picsou version
+    - docker run --rm ${CI_REGISTRY_IMAGE}:${VERSION} version
 
 deploy_docker:
   stage: deploy
