@@ -78,7 +78,7 @@ package_linux:
     - *prepare_build
     - APP=picsou
     - GOOS=linux
-    - for GOARCH in amd64 arm; do go build -v -o $APP-$GOOS-$GOARCH github.com/nlamirault/picsou/cmd/$APP; done
+    - for GOARCH in amd64 arm; do go build -v -o $APP-$GOOS-$GOARCH github.com/nlamirault/picsou/cmd; done
     - mkdir binaries && mv picsou-$GOOS-* binaries
     - ls binaries
   artifacts:
