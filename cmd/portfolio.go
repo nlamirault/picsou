@@ -15,7 +15,6 @@
 package cmd
 
 import (
-	"fmt"
 	"io"
 	"strconv"
 
@@ -45,10 +44,6 @@ func newPortfolioCmd(out io.Writer) *cobra.Command {
 		Short: "Manage portfolio.",
 		Long:  "Manage portfolio.",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(configFilename) == 0 {
-				return fmt.Errorf("missing configuration filename")
-			}
-
 			conf, err := config.LoadFileConfig(configFilename)
 			if err != nil {
 				return err
@@ -64,13 +59,20 @@ func newPortfolioCmd(out io.Writer) *cobra.Command {
 	return cmd
 }
 
+type walletCoin struct {
+	Name    string
+	Percent float64
+	Money   float64
+}
+
 func (cmd portfolioCmd) getPortfolio(client *coinmarketcap.Client, conf *config.Configuration) error {
 	glog.V(1).Infof("Get crypto currencies portfolio: %s", conf)
 	coins := []coinmarketcap.Coin{}
-	wallet := map[string]float64{}
+	// wallet := map[string]float64{}
+	wallet := map[string]walletCoin{}
 
 	ac := pkgcmd.GetAccounting(conf.Currency)
-
+	walletTotal := 0.0
 	for name, owned := range conf.Portfolio {
 		coin, err := client.GetCoin(name, conf.Currency, 1)
 		if err != nil {
@@ -85,12 +87,20 @@ func (cmd portfolioCmd) getPortfolio(client *coinmarketcap.Client, conf *config.
 		if err != nil {
 			return err
 		}
-		wallet[name] = nb * price
+		// wallet[name] = nb * price
+		wallet[name] = walletCoin{
+			Name:  name,
+			Money: nb * price,
+		}
+		walletTotal = walletTotal + wallet[name].Money
 	}
 	glog.V(2).Infof("Coins: %s", coins)
 	glog.V(2).Infof("Wallet: %s", wallet)
-	for name, money := range wallet {
-		fmt.Fprintf(cmd.out, "%s: %s\n", pkgcmd.GreenOut(name), pkgcmd.GetMoney(ac, fmt.Sprintf("%f", money)))
+	for name, coin := range wallet {
+		// percent := fmt.Sprintf("%.0f", (coin.Money*100)/walletTotal)
+		// fmt.Fprintf(cmd.out, "%s: %s, [%s%%]\n", pkgcmd.GreenOut(name), pkgcmd.GetMoney(ac, fmt.Sprintf("%f", coin.Money)), percent)
+		pkgcmd.DisplayWalletBars(cmd.out, name, coin.Money, walletTotal, ac)
+
 	}
 	if err := pkgcmd.DisplayCoins(cmd.out, coins, conf.Currency); err != nil {
 		return err
