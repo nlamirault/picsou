@@ -13,13 +13,13 @@
 # limitations under the License.
 
 variables:
-  REGISTRY: registry.gitlab.com
-  NAME: nlamirault/picsou
+  REGISTRY: "registry.gitlab.com"
+  NAME: "nlamirault/picsou"
 
-  BINTRAY_URI: https://api.bintray.com
-  BINTRAY_USERNAME: nlamirault
-  BINTRAY_ORG: nlamirault
-  BINTRAY_REPOSITORY: oss
+  BINTRAY_URI: "https://api.bintray.com"
+  BINTRAY_USERNAME: "nlamirault"
+  BINTRAY_ORG: "nlamirault"
+  BINTRAY_REPOSITORY: "oss"
 
 
 stages:
