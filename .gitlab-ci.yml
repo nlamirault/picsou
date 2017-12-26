@@ -147,6 +147,7 @@ publish_bintray:
     - package_windows
   before_script:
     - "apt-get update && apt-get install -y curl"
+    - echo "$BINTRAY_USERNAME"
   script:
     - ls binaries
     - echo "$BINTRAY_USERNAME"
