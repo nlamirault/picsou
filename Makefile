@@ -80,29 +80,29 @@ deps: ## Install dependencies
 .PHONY: build
 build: ## Make binary
 	@echo -e "$(OK_COLOR)[$(APP)] Build $(NO_COLOR)"
-	@CGO_ENABLED=0 $(GO) build -tags "$(BUILDTAGS) static_build" .
+	@CGO_ENABLED=0 go build -tags "$(BUILDTAGS) static_build" .
 
 .PHONY: test
 test: ## Launch unit tests
 	@echo -e "$(OK_COLOR)[$(APP)] Launch unit tests $(NO_COLOR)"
-	@$(GO) test -v -tags "$(BUILDTAGS) cgo" $(shell $(GO) list ./... | grep -v vendor)
+	@go test -v -tags "$(BUILDTAGS) cgo" $(shell go list ./... | grep -v vendor)
+
+.PHONY: coverage
+coverage: ## Launch code coverage
+	@go test -cover -v -tags "$(BUILDTAGS) cgo" $(shell $(GO) list ./... | grep -v vendor)
 
 .PHONY: lint
 lint: ## Launch golint
-	@$(foreach file,$(SRCS),golint $(file) || exit;)
+	@golint $(shell $(GO) list ./... | grep -v vendor)
 
 .PHONY: vet
 vet: ## Launch go vet
-	@$(foreach file,$(SRCS),$(GO) vet $(file) || exit;)
+	@go vet $(shell go list ./... | grep -v vendor)
 
 .PHONY: errcheck
 errcheck: ## Launch go errcheck
 	@echo -e "$(OK_COLOR)[$(APP)] Go Errcheck $(NO_COLOR)"
-	@$(foreach pkg,$(PKGS),errcheck $(pkg) || exit;)
-
-.PHONY: coverage
-coverage: ## Launch code coverage
-	@$(foreach pkg,$(PKGS),$(GO) test -cover $(pkg) || exit;)
+	@errcheck $(shell go list ./... | grep -v vendor)
 
 gox: ## Make all binaries
 	@echo -e "$(OK_COLOR)[$(APP)] Create binaries $(NO_COLOR)"
