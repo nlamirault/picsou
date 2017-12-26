@@ -1,6 +1,12 @@
 ChangeLog
 ==============
 
+# Version 0.2.0 (26/24/2017)
+
+- Portfolio: new command to display a portfolio of crypto currencies
+- Docker: add Dockerfile
+- GitlabCI: setup CI/CD using Gitlab
+
 # Version 0.1.0 (12/24/2017)
 
 - Display a specific currency
