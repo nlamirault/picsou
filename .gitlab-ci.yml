@@ -60,9 +60,7 @@ test_docker:
   script:
     - *docker_tag
     - docker build -t "$CI_REGISTRY_IMAGE:${VERSION}" .
-    - docker run --rm ${CI_REGISTRY_IMAGE}:${VERSION} picsoud version
-    - docker run --rm ${CI_REGISTRY_IMAGE}:${VERSION} picsouadm version
-    - docker run --rm ${CI_REGISTRY_IMAGE}:${VERSION} picsouctl version
+    - docker run --rm ${CI_REGISTRY_IMAGE}:${VERSION} picsou version
 
 deploy_docker:
   stage: deploy
