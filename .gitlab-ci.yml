@@ -147,8 +147,8 @@ publish_bintray:
     # - package_bsd
     - package_darwin
     - package_windows
-    - ls
   before_script:
     - "apt-get update && apt-get install -y curl"
   script:
+    - ls
     - cd binaries && for file in $(ls); do echo $file; curl -T $file -u ${BINTRAY_USERNAME}:${BINTRAY_APIKEY} ${BINTRAY_URI}/content/${BINTRAY_ORG}/${BINTRAY_REPOSITORY}/${APP}/${VERSION}/$i;publish=1; done
