@@ -112,7 +112,7 @@ var cryptoCurrencies = map[string]string{
 	"PAY":       "tenx",
 	"MAID":      "maidsafecoin",
 	"GNT":       "golem-network-tokens",
-	"BAT":       "batcoin",
+	"BAT":       "basic-attention-token",
 	"EOS":       "eos",
 	"DCR":       "decred",
 	"REP":       "augur",
