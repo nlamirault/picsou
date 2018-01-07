@@ -1,7 +1,12 @@
 ChangeLog
 ==============
 
-# Version 0.2.0 (26/24/2017)
+# Version 0.3.0 (01/07/2018)
+
+- Portfolio: refactoring command
+- Currencies: fix some crypto currencies for Coinmarketcap
+
+# Version 0.2.0 (12/26/2017)
 
 - Portfolio: new command to display a portfolio of crypto currencies
 - Docker: add Dockerfile
