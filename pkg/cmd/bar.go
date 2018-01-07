@@ -21,13 +21,51 @@ import (
 	"strings"
 
 	"github.com/leekchan/accounting"
+	//	"github.com/olekukonko/tablewriter"
+	//	"github.com/nlamirault/picsou/pkg/coins"
 )
 
 const (
 	barChar = "∎"
 )
 
+// type WalletCoin struct {
+// 	Name    string
+// 	Percent float64
+// 	Money   float64
+// }
+
+// func DisplayWalletTable(out io.Writer, wallet map[string]coins.Wallet, ac accounting.Accounting) {
+
+// 	table := tablewriter.NewWriter(out)
+// 	table.SetHeader([]string{
+// 		"Symbol",
+// 		"Money",
+// 		"Percent",
+// 		"Vue"})
+// 	table.SetRowLine(true)
+// 	table.SetAutoWrapText(false)
+
+// 	for _, coin := range coins {
+// 		table.Append([]string{
+// 			YellowOut(coin.Rank),
+// 			BlueOut(coin.Symbol),
+// 			BlueOut(coin.Name),
+// 			GetMoney(ac, coinmarketcap.GetPrice(coin, currency)),
+// 			GetMoney(ac, coinmarketcap.Two4HVolume(coin, currency)),
+// 			GetMoney(ac, coinmarketcap.MarketCap(coin, currency)),
+// 			getPercentColor(coin.PercentChange1H),
+// 			getPercentColor(coin.PercentChange24H),
+// 			getPercentColor(coin.PercentChange7D),
+// 			coin.LastUpdated,
+// 		})
+// 	}
+// 	table.Render()
+// 	return nil
+// }
+
 func DisplayWalletBars(out io.Writer, name string, money float64, walletTotal float64, ac accounting.Accounting) {
+
 	percent := fmt.Sprintf("%.0f", (money*100)/walletTotal)
 	fmt.Fprintf(out, "%s: %s, [%s%%]\t", GreenOut(name), GetMoney(ac, fmt.Sprintf("%f", money)), percent)
 
