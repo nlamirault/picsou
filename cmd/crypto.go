@@ -17,12 +17,8 @@ package cmd
 import (
 	"fmt"
 	"io"
-	// "strconv"
-	// "strings"
 
 	"github.com/golang/glog"
-	// "github.com/leekchan/accounting"
-	// "github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 
 	pkgcmd "github.com/nlamirault/picsou/pkg/cmd"
