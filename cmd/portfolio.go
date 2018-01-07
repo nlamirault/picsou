@@ -107,15 +107,7 @@ func (cmd portfolioCmd) getPortfolio(client *coinmarketcap.Client, conf *config.
 	if err != nil {
 		return err
 	}
-
-	for name, coin := range portfolio.wallet.Coins {
-		// percent := fmt.Sprintf("%.0f", (coin.Money*100)/walletTotal)
-		// fmt.Fprintf(cmd.out, "%s: %s, [%s%%]\n", pkgcmd.GreenOut(name), pkgcmd.GetMoney(ac, fmt.Sprintf("%f", coin.Money)), percent)
-		pkgcmd.DisplayWalletBars(cmd.out, name, coin.Money, portfolio.wallet.Total, ac)
-
-	}
-
-	return nil
+	return pkgcmd.DisplayWalletTable(cmd.out, portfolio.wallet, ac)
 }
 
 func (cmd portfolioCmd) portfolioStatus(client *coinmarketcap.Client, conf *config.Configuration) error {
@@ -125,12 +117,7 @@ func (cmd portfolioCmd) portfolioStatus(client *coinmarketcap.Client, conf *conf
 	if err != nil {
 		return err
 	}
-
-	if err := pkgcmd.DisplayCoins(cmd.out, portfolio.coins, conf.Currency); err != nil {
-		return err
-	}
-
-	return nil
+	return pkgcmd.DisplayCoins(cmd.out, portfolio.coins, conf.Currency)
 }
 
 func (cmd portfolioCmd) retrievePortofolio(client *coinmarketcap.Client, currency string, currencies map[string]string) (*portfolio, error) {
@@ -139,7 +126,6 @@ func (cmd portfolioCmd) retrievePortofolio(client *coinmarketcap.Client, currenc
 		wallet: &pkgcoins.Wallet{
 			Coins: map[string]pkgcoins.Coin{},
 		},
-		// total:  0,
 	}
 
 	for name, owned := range currencies {
