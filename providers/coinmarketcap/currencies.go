@@ -95,6 +95,7 @@ var cryptoCurrencies = map[string]string{
 	"XEM":       "nem",
 	"MIOTA":     "iota",
 	"XMR":       "monero",
+	"ADA":       "cardano",
 	"ETC":       "ethereum-classic",
 	"NEO":       "neo",
 	"OMG":       "omisego",
