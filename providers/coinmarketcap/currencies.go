@@ -1185,6 +1185,13 @@ var cryptoCurrencies = map[string]string{
 	"YOG":       "yogold",
 	"HLB":       "lepaoquan",
 	"QRZ":       "quartz-qrz",
+	"QSP":       "quantstamp",
+	"REQ":       "request-network",
+	"ACT":       "achain",
+	"SUB":       "substratum",
+	"SNOV":      "snovio",
+	"CND":       "cindicator",
+	"LEND":      "ethlend",
 }
 
 func getCryptoCurrencyName(cryptocurrency string) (string, error) {

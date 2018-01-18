@@ -85,16 +85,8 @@ func newPortfolioCmd(out io.Writer) *cobra.Command {
 	return cmd
 }
 
-// type walletCoin struct {
-// 	Name    string
-// 	Percent float64
-// 	Money   float64
-// }
-
 type portfolio struct {
-	coins []coinmarketcap.Coin
-	// wallet map[string]coins.Wallet
-	// total  float64
+	coins  []coinmarketcap.Coin
 	wallet *pkgcoins.Wallet
 }
 

@@ -56,6 +56,7 @@ func DisplayWalletTable(out io.Writer, wallet *pkgcoins.Wallet, ac accounting.Ac
 	table.SetHeader([]string{
 		"Symbol",
 		"Price",
+		"Money",
 		"Percent",
 		"Vue"})
 	table.SetRowLine(true)
@@ -83,23 +84,6 @@ func DisplayWalletBars(out io.Writer, name string, money float64, walletTotal fl
 	percent := fmt.Sprintf("%.0f", (money*100)/walletTotal)
 	fmt.Fprintf(out, "%s: %s, [%s%%]\t", GreenOut(name), GetMoney(ac, fmt.Sprintf("%f", money)), percent)
 
-	// var barLen int
-	// barLen, err := strconv.Atoi(percent)
-	// if err != nil {
-	// 	return
-	// }
-
-	// var bars string
-	// switch {
-	// case 0 < barLen && barLen < 30:
-	// 	bars = BlueOut(barChar)
-	// case 30 < barLen && barLen < 50:
-	// 	bars = GreenOut(barChar)
-	// case 50 < barLen && barLen < 70:
-	// 	bars = YellowOut(barChar)
-	// case 70 < barLen:
-	// 	bars = RedOut(barChar)
-	// }
 	barLen, bars, err := getCoinBars(percent)
 	if err != nil {
 		return
