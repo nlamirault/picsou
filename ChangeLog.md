@@ -1,7 +1,7 @@
 ChangeLog
 ==============
 
-# Version 0.3.0 (01/07/2018)
+# Version 0.3.0 (31/07/2018)
 
 - Portfolio: refactoring command
 - Currencies: fix some crypto currencies for Coinmarketcap
