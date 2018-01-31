@@ -16,9 +16,9 @@ package coins
 
 // Coin represents a crypto currency
 type Coin struct {
-	Name    string
-	Percent float64
-	Money   float64
+	Name   string
+	Number float64
+	Money  float64
 }
 
 // Wallet represents a wallet of crypto currencies

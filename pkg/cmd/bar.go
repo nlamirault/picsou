@@ -20,6 +20,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/golang/glog"
+
 	"github.com/leekchan/accounting"
 	pkgcoins "github.com/nlamirault/picsou/pkg/coins"
 	"github.com/olekukonko/tablewriter"
@@ -56,7 +58,7 @@ func DisplayWalletTable(out io.Writer, wallet *pkgcoins.Wallet, ac accounting.Ac
 	table.SetHeader([]string{
 		"Symbol",
 		"Price",
-		"Money",
+		"Number",
 		"Percent",
 		"Vue"})
 	table.SetRowLine(true)
@@ -64,14 +66,16 @@ func DisplayWalletTable(out io.Writer, wallet *pkgcoins.Wallet, ac accounting.Ac
 
 	for _, coin := range wallet.Coins {
 		percent := fmt.Sprintf("%.0f", (coin.Money*100)/wallet.Total)
+		glog.V(2).Infof("Coin: %s %f", coin, percent)
 		barLen, bars, err := getCoinBars(percent)
 		if err != nil {
 			return err
 		}
 		table.Append([]string{
 			YellowOut(coin.Name),
-			GetMoney(ac, fmt.Sprintf("%f", coin.Money)),
-			percent,
+			fmt.Sprintf("%f", coin.Money),
+			fmt.Sprintf("%f", coin.Number),
+			fmt.Sprintf("%s", percent),
 			fmt.Sprintf("%v", strings.Repeat(bars, barLen)),
 		})
 	}

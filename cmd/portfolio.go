@@ -135,8 +135,9 @@ func (cmd portfolioCmd) retrievePortofolio(client *coinmarketcap.Client, currenc
 			return nil, err
 		}
 		portfolio.wallet.Coins[name] = pkgcoins.Coin{
-			Name:  name,
-			Money: nb * price,
+			Name:   name,
+			Money:  nb * price,
+			Number: nb,
 		}
 		portfolio.wallet.Total = portfolio.wallet.Total + portfolio.wallet.Coins[name].Money
 	}
