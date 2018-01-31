@@ -110,11 +110,15 @@ With this example portfolio:
 
 currency = "EUR"
 
-[portfolio]
-BTC = "0.013"
-DOGE = "150"
-ETH = "0.145"
-LTC = "0.123"
+[portfolios]
+
+    [portfolios.binance]
+    BTC = "0.013"
+    DOGE = "150"
+    ETH = "0.145"
+
+    [portfolios.kucoin]
+    LTC = "0.123"
 ```
 
 
