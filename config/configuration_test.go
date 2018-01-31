@@ -32,11 +32,15 @@ func TestGetConfiguration(t *testing.T) {
 
 currency = "EUR"
 
-[portfolio]
-BTC = "0.013"
-DOGE = "150"
-ETH = "0.145"
-LTC = "0.123"
+[portfolios]
+
+  [portfolios.binance]
+  BTC = "0.013"
+  DOGE = "150"
+  ETH = "0.145"
+
+  [portfolios.kucoin]
+  LTC = "0.123"
 
 `)
 	err = ioutil.WriteFile(templateFile.Name(), data, 0700)
@@ -48,8 +52,9 @@ LTC = "0.123"
 
 	fmt.Printf("Configuration : %#v\n", configuration)
 	assert.Equal(t, "EUR", configuration.Currency)
-	assert.Equal(t, "0.013", configuration.Portfolio["bitcoin"])
-	assert.Equal(t, "150", configuration.Portfolio["dogecoin"])
-	assert.Equal(t, "0.145", configuration.Portfolio["ethereum"])
-	assert.Equal(t, "0.123", configuration.Portfolio["litecoin"])
+	assert.Equal(t, 2, len(configuration.Portfolios))
+	assert.Equal(t, "0.013", configuration.Portfolios["binance"]["BTC"])
+	assert.Equal(t, "150", configuration.Portfolios["binance"]["DOGE"])
+	assert.Equal(t, "0.145", configuration.Portfolios["binance"]["ETH"])
+	assert.Equal(t, "0.123", configuration.Portfolios["kucoin"]["LTC"])
 }

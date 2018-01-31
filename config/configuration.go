@@ -18,10 +18,13 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+type Portfolio map[string]string
+
 // Configuration holds configuration for application
 type Configuration struct {
-	Currency  string
-	Portfolio map[string]string
+	Currency string
+	// Portfolio map[string]string
+	Portfolios map[string]Portfolio
 }
 
 // LoadFileConfig returns a Configuration from reading the specified file (a toml file).

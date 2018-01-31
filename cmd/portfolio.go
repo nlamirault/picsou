@@ -15,6 +15,7 @@
 package cmd
 
 import (
+	"fmt"
 	"io"
 	"strconv"
 
@@ -85,7 +86,7 @@ func newPortfolioCmd(out io.Writer) *cobra.Command {
 	return cmd
 }
 
-type portfolio struct {
+type cryptofolio struct {
 	coins  []coinmarketcap.Coin
 	wallet *pkgcoins.Wallet
 }
@@ -95,25 +96,37 @@ func (cmd portfolioCmd) getPortfolio(client *coinmarketcap.Client, conf *config.
 
 	ac := pkgcmd.GetAccounting(conf.Currency)
 
-	portfolio, err := cmd.retrievePortofolio(client, conf.Currency, conf.Portfolio)
-	if err != nil {
-		return err
+	for name, portfolio := range conf.Portfolios {
+		portfolioCurrencies, err := cmd.retrievePortofolio(client, conf.Currency, portfolio)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(cmd.out, "Portfoloio: %s\n", pkgcmd.BlueOut(name))
+		if err := pkgcmd.DisplayWalletTable(cmd.out, portfolioCurrencies.wallet, ac); err != nil {
+			return err
+		}
 	}
-	return pkgcmd.DisplayWalletTable(cmd.out, portfolio.wallet, ac)
+	return nil
 }
 
 func (cmd portfolioCmd) portfolioStatus(client *coinmarketcap.Client, conf *config.Configuration) error {
 	glog.V(1).Infof("Crypto currencies portfolio status: %s", conf)
 
-	portfolio, err := cmd.retrievePortofolio(client, conf.Currency, conf.Portfolio)
-	if err != nil {
-		return err
+	for name, portfolio := range conf.Portfolios {
+		portfolioCurrencies, err := cmd.retrievePortofolio(client, conf.Currency, portfolio)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(cmd.out, "Portfoloio: %s\n", pkgcmd.BlueOut(name))
+		if err := pkgcmd.DisplayCoins(cmd.out, portfolioCurrencies.coins, conf.Currency); err != nil {
+			return err
+		}
 	}
-	return pkgcmd.DisplayCoins(cmd.out, portfolio.coins, conf.Currency)
+	return nil
 }
 
-func (cmd portfolioCmd) retrievePortofolio(client *coinmarketcap.Client, currency string, currencies map[string]string) (*portfolio, error) {
-	portfolio := &portfolio{
+func (cmd portfolioCmd) retrievePortofolio(client *coinmarketcap.Client, currency string, currencies map[string]string) (*cryptofolio, error) {
+	cryptofolio := &cryptofolio{
 		coins: []coinmarketcap.Coin{},
 		wallet: &pkgcoins.Wallet{
 			Coins: map[string]pkgcoins.Coin{},
@@ -125,7 +138,7 @@ func (cmd portfolioCmd) retrievePortofolio(client *coinmarketcap.Client, currenc
 		if err != nil {
 			return nil, err
 		}
-		portfolio.coins = append(portfolio.coins, coin...)
+		cryptofolio.coins = append(cryptofolio.coins, coin...)
 		nb, err := strconv.ParseFloat(owned, 64)
 		if err != nil {
 			return nil, err
@@ -134,13 +147,13 @@ func (cmd portfolioCmd) retrievePortofolio(client *coinmarketcap.Client, currenc
 		if err != nil {
 			return nil, err
 		}
-		portfolio.wallet.Coins[name] = pkgcoins.Coin{
+		cryptofolio.wallet.Coins[name] = pkgcoins.Coin{
 			Name:   name,
 			Money:  nb * price,
 			Number: nb,
 		}
-		portfolio.wallet.Total = portfolio.wallet.Total + portfolio.wallet.Coins[name].Money
+		cryptofolio.wallet.Total = cryptofolio.wallet.Total + cryptofolio.wallet.Coins[name].Money
 	}
-	glog.V(2).Infof("Portfolio: %s", portfolio)
-	return portfolio, nil
+	glog.V(2).Infof("Cryptofolio: %s", cryptofolio)
+	return cryptofolio, nil
 }
