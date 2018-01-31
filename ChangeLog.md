@@ -1,6 +1,11 @@
 ChangeLog
 ==============
 
+
+# Version 0.4.0 (31/07/2018)
+
+- ``#13``: Support for multiple portfolio
+
 # Version 0.3.0 (31/07/2018)
 
 - Portfolio: refactoring command
