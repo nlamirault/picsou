@@ -32,6 +32,8 @@ func TestGetConfiguration(t *testing.T) {
 
 currency = "EUR"
 
+mode = "manual"
+
 [portfolios]
 
   [portfolios.binance]
@@ -52,9 +54,46 @@ currency = "EUR"
 
 	fmt.Printf("Configuration : %#v\n", configuration)
 	assert.Equal(t, "EUR", configuration.Currency)
+	assert.Equal(t, "manual", configuration.Mode)
 	assert.Equal(t, 2, len(configuration.Portfolios))
 	assert.Equal(t, "0.013", configuration.Portfolios["binance"]["BTC"])
 	assert.Equal(t, "150", configuration.Portfolios["binance"]["DOGE"])
 	assert.Equal(t, "0.145", configuration.Portfolios["binance"]["ETH"])
 	assert.Equal(t, "0.123", configuration.Portfolios["kucoin"]["LTC"])
+}
+
+func TestGetConfigurationAPIMode(t *testing.T) {
+	templateFile, err := ioutil.TempFile("", "configuration")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(templateFile.Name())
+	data := []byte(`# configuration file
+
+currency = "EUR"
+
+mode = "api"
+
+[exchanges]
+
+  [exchanges.binance]
+  Type = "binance"
+  Apikey = "xxxyyy"
+
+  [exchanges.kucoin]
+  Type = "kucoin"
+  Apikey = "aaaabbbb"
+
+`)
+	err = ioutil.WriteFile(templateFile.Name(), data, 0700)
+	if err != nil {
+		t.Fatal(err)
+	}
+	configuration, err := LoadFileConfig(templateFile.Name())
+	assert.NoError(t, err)
+
+	fmt.Printf("Configuration : %#v\n", configuration)
+	assert.Equal(t, "EUR", configuration.Currency)
+	assert.Equal(t, "api", configuration.Mode)
+	assert.Equal(t, 2, len(configuration.Exchanges))
 }

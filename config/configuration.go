@@ -20,11 +20,18 @@ import (
 
 type Portfolio map[string]string
 
+type Exchange struct {
+	Type   string
+	Apikey string
+}
+
 // Configuration holds configuration for application
 type Configuration struct {
 	Currency string
+	Mode     string
 	// Portfolio map[string]string
 	Portfolios map[string]Portfolio
+	Exchanges  map[string]Exchange
 }
 
 // LoadFileConfig returns a Configuration from reading the specified file (a toml file).
