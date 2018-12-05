@@ -1,0 +1,43 @@
+# github.com/BurntSushi/toml v0.3.0
+github.com/BurntSushi/toml
+# github.com/binance-exchange/go-binance v0.0.0-20180518133450-1af034307da5
+github.com/binance-exchange/go-binance
+# github.com/davecgh/go-spew v1.1.0
+github.com/davecgh/go-spew/spew
+# github.com/fatih/color v1.5.0
+github.com/fatih/color
+# github.com/go-kit/kit v0.8.0
+github.com/go-kit/kit/log
+github.com/go-kit/kit/log/level
+# github.com/go-logfmt/logfmt v0.4.0
+github.com/go-logfmt/logfmt
+# github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
+github.com/golang/glog
+# github.com/gorilla/websocket v1.4.0
+github.com/gorilla/websocket
+# github.com/inconshreveable/mousetrap v1.0.0
+github.com/inconshreveable/mousetrap
+# github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515
+github.com/kr/logfmt
+# github.com/leekchan/accounting v0.0.0-20161211142212-a35854c07593
+github.com/leekchan/accounting
+# github.com/mattn/go-colorable v0.0.9
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.3
+github.com/mattn/go-isatty
+# github.com/mattn/go-runewidth v0.0.2
+github.com/mattn/go-runewidth
+# github.com/olekukonko/tablewriter v0.0.0-20171203151007-65fec0d89a57
+github.com/olekukonko/tablewriter
+# github.com/pkg/errors v0.8.0
+github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/spf13/cobra v0.0.1
+github.com/spf13/cobra
+# github.com/spf13/pflag v1.0.0
+github.com/spf13/pflag
+# github.com/stretchr/testify v1.1.4
+github.com/stretchr/testify/assert
+# golang.org/x/sys v0.0.0-20171222143536-83801418e1b5
+golang.org/x/sys/unix
